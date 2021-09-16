@@ -95,7 +95,7 @@ const createAddWindow = () => {
 // Create Tray
 const createTray = () => {
   mainTray = Tray(iconPath);
-  
+
   let menuTemplate = [
     {
       label: "Open",
@@ -122,9 +122,21 @@ const createTray = () => {
   mainTray.setToolTip("Task Manager Application");
 };
 
+// Process
+const reviewProcess = () => {
+  console.log("--------");
+  console.log(process.getCPUUsage().percentCPUUsage * 100);
+  console.log("--------");
+  console.log(process.getSystemMemoryInfo());
+  console.log("--------");
+  console.log(process.getSystemVersion());
+};
+
 app.whenReady().then(() => {
   createMainWindow();
   createTray();
+
+  reviewProcess();
 });
 
 ipcMain.on("task-add", async (event, args) => {

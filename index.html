@@ -21,6 +21,16 @@
       const { ipcRenderer, shell } = electron;
       console.log("Khởi tạo thành công cửa sổ index.html");
 
+      const reviewProcess = () => {
+        console.log("--------");
+        console.log(process.getCPUUsage().percentCPUUsage * 100);
+        console.log("--------");
+        console.log(process.getSystemMemoryInfo());
+        console.log("--------");
+        console.log(process.getSystemVersion());
+      };
+      reviewProcess();
+
       // Global variables
       let data = [
         {
