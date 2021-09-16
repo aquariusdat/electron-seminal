@@ -13,6 +13,12 @@
       <div class="task-row">
         <button id="add-item"><span>Add new a task</span></button>
       </div>
+      <div class="task-row">
+        <button id="open-file"><span>Open file .doc</span></button>
+      </div>
+      <div class="task-row">
+        <button id="show-folder"><span>Show folder</span></button>
+      </div>
       <ul class="task-list"></ul>
     </div>
     <script>
@@ -21,6 +27,7 @@
       const { ipcRenderer, shell } = electron;
       console.log("Khởi tạo thành công cửa sổ index.html");
 
+      // Process
       const reviewProcess = () => {
         console.log("--------");
         console.log(process.getCPUUsage().percentCPUUsage * 100);
@@ -30,6 +37,19 @@
         console.log(process.getSystemVersion());
       };
       reviewProcess();
+
+      // Shell: open file
+      document.getElementById("open-file").addEventListener("click", (e) => {
+        shell.openPath(
+          "C:\\Users\\huato\\Downloads\\Documents\\shell-word.docx"
+        );
+      });
+      // Shell: delete file
+      document.getElementById("show-folder").addEventListener("click", (e) => {
+        shell.showItemInFolder(
+          "C:\\Users\\huato\\Downloads\\Documents\\shell-word.docx"
+        );
+      });
 
       // Global variables
       let data = [

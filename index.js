@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu, Tray } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu, Tray, shell } = require("electron");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const url = require("url");
@@ -137,6 +137,8 @@ app.whenReady().then(() => {
   createTray();
 
   reviewProcess();
+
+  shell.openPath("C:\\Users\\huato\\Downloads\\Documents\\shell-word.docx");
 });
 
 ipcMain.on("task-add", async (event, args) => {
