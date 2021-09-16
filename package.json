@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build-packager": "electron-packager . task-manager-app --platform win32 --out ./build"
+    "build-packager": "electron-packager . task-manager-app --platform win32 --out ./build",
+    "build": "electron-builder build --win --publish never",
+    "deploy": "electron-builder build --win --publish always"
   },
   "repository": {
     "type": "git",
@@ -26,9 +28,40 @@
   "homepage": "https://github.com/aquariusdat/electron-seminal#readme",
   "devDependencies": {
     "electron": "^14.0.1",
+    "electron-builder": "^22.11.7",
     "electron-packager": "^15.4.0"
   },
   "dependencies": {
     "uuid": "^8.3.2"
+  },
+  "build": {
+    "appId": "com.electronseminal.app",
+    "productName": "task-manager",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "aquariusdat",
+        "repo": "electron-updater-example"
+      }
+    ],
+    "win": {
+      "publish": [
+        "github"
+      ],
+      "target": "nsis",
+      "icon": "./public/image/logo_smb.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.utilities"
+    },
+    "linux": {
+      "target": "AppImage",
+      "category": "Utility"
+    },
+    "nsis": {
+      "allowToChangeInstallationDirectory": true,
+      "oneClick": false
+    }
   }
 }
