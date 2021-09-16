@@ -1,0 +1,29 @@
+{
+  "name": "electron-seminal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aquariusdat/electron-seminal.git"
+  },
+  "keywords": [
+    "electron",
+    "auto-updater",
+    "electron-packager",
+    "electron-builder"
+  ],
+  "author": "Hua Ton Dat",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aquariusdat/electron-seminal/issues"
+  },
+  "homepage": "https://github.com/aquariusdat/electron-seminal#readme",
+  "devDependencies": {
+    "electron": "^14.0.1"
+  }
+}
