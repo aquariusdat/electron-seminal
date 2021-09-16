@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "electron .",
+    "build-packager": "electron-packager . task-manager-app --platform win32 --out ./build"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,8 @@
   },
   "homepage": "https://github.com/aquariusdat/electron-seminal#readme",
   "devDependencies": {
-    "electron": "^14.0.1"
+    "electron": "^14.0.1",
+    "electron-packager": "^15.4.0"
   },
   "dependencies": {
     "uuid": "^8.3.2"

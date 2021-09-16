@@ -137,8 +137,6 @@ app.whenReady().then(() => {
   createTray();
 
   reviewProcess();
-
-  shell.openPath("C:\\Users\\huato\\Downloads\\Documents\\shell-word.docx");
 });
 
 ipcMain.on("task-add", async (event, args) => {
