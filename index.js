@@ -1,13 +1,16 @@
-const { app, BrowserWindow, ipcMain, Menu } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu, Tray } = require("electron");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const url = require("url");
+const MenuTray = Menu;
+const iconPath = path.join(__dirname, "/public/image/logo_smb.png");
 
 // process.env.NODE_ENV = "production";
 
 let mainWindow;
 let addWindow;
 let menuApplication;
+let mainTray;
 
 let menuTemplate = [
   {
@@ -89,8 +92,39 @@ const createAddWindow = () => {
   );
 };
 
+// Create Tray
+const createTray = () => {
+  mainTray = Tray(iconPath);
+  
+  let menuTemplate = [
+    {
+      label: "Open",
+      click() {
+        mainWindow.show();
+      },
+    },
+    {
+      label: "Hidden",
+      click() {
+        mainWindow.hide();
+      },
+    },
+    {
+      label: "Exit",
+      click() {
+        app.quit();
+      },
+    },
+  ];
+
+  const ctxMenu = MenuTray.buildFromTemplate(menuTemplate);
+  mainTray.setContextMenu(ctxMenu);
+  mainTray.setToolTip("Task Manager Application");
+};
+
 app.whenReady().then(() => {
   createMainWindow();
+  createTray();
 });
 
 ipcMain.on("task-add", async (event, args) => {
