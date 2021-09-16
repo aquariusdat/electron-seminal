@@ -1,10 +1,34 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, Menu } = require("electron");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const url = require("url");
 
+// process.env.NODE_ENV = "production";
+
 let mainWindow;
 let addWindow;
+let menuApplication;
+
+let menuTemplate = [
+  {
+    label: "File",
+    submenu: [
+      {
+        label: "Add a new task",
+        click() {
+          createAddWindow();
+        },
+      },
+      {
+        label: "Exit",
+        accelerator: process.platform == "darwin" ? "Command+Q" : "Control+Q",
+        click() {
+          app.quit();
+        },
+      },
+    ],
+  },
+];
 
 const createMainWindow = () => {
   mainWindow = new BrowserWindow({
@@ -25,8 +49,24 @@ const createMainWindow = () => {
     })
   );
 
-  mainWindow.openDevTools();
+  menuApplication = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menuApplication);
 };
+
+if (process.env.NODE_ENV !== "production") {
+  menuTemplate.push({
+    label: "Developer Tools",
+    submenu: [
+      {
+        label: "Toggle DevTools",
+        accelerator: process.platform == "darwin" ? "Command+I" : "Control+I",
+        click(item, focusedWindow) {
+          focusedWindow.toggleDevTools();
+        },
+      },
+    ],
+  });
+}
 
 // create Add task Window
 const createAddWindow = () => {
