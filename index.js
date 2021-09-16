@@ -1,17 +1,91 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
+const { v4: uuidv4 } = require("uuid");
+const path = require("path");
+const url = require("url");
 
 let mainWindow;
+let addWindow;
 
 const createMainWindow = () => {
   mainWindow = new BrowserWindow({
-    minWidth: 1000,
-    minHeight: 700,
+    minWidth: 1500,
+    minHeight: 1000,
     title: "Task Application",
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
   });
 
-  mainWindow.loadFile("index.html");
+  mainWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, "index.html"),
+      protocol: "file",
+      slashes: true,
+    })
+  );
+
+  mainWindow.openDevTools();
+};
+
+// create Add task Window
+const createAddWindow = () => {
+  addWindow = new BrowserWindow({
+    width: 300,
+    height: 200,
+    title: "Add Task",
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+
+  addWindow.loadURL(
+    url.format({
+      pathname: path.join(__dirname, "create.html"),
+      protocol: "file",
+      slashes: true,
+    })
+  );
 };
 
 app.whenReady().then(() => {
   createMainWindow();
+});
+
+ipcMain.on("task-add", async (event, args) => {
+  console.log("------------");
+  console.log('Da nhan duoc yeu cau cua index.html voi ten la "task-add"');
+  console.log("Chuan bi tao cua so AddWindow");
+  createAddWindow();
+});
+
+ipcMain.on("submit-task", async (event, args) => {
+  console.log("------------");
+  console.log(
+    `Da nhan duoc yeu cau va du lieu cua create.html voi ten la "submit-task": ${args}`
+  );
+  const taskName = args;
+  const taskID = uuidv4();
+  const data = {
+    taskName,
+    taskID,
+  };
+
+  console.log('Gui du lieu cua so index.html voi yeu cau ten la "submit-task"');
+  mainWindow.webContents.send("submit-task", data);
+  addWindow.close();
+});
+
+// Xử lý sau khi Window được đóng
+app.on("window-all-closed", () => {
+  app.quit();
+});
+
+// Xử lý khi app ở trạng thái active, ví dụ click vào icon
+app.on("activate", () => {
+  // Mở window mới khi không có window nào
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createMainWindow();
+  }
 });

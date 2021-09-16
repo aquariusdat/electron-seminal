@@ -25,5 +25,8 @@
   "homepage": "https://github.com/aquariusdat/electron-seminal#readme",
   "devDependencies": {
     "electron": "^14.0.1"
+  },
+  "dependencies": {
+    "uuid": "^8.3.2"
   }
 }
