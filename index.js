@@ -4,6 +4,7 @@ const path = require("path");
 const url = require("url");
 const MenuTray = Menu;
 const iconPath = path.join(__dirname, "/public/image/logo_smb.png");
+const { autoUpdater } = require("electron-updater");
 
 // process.env.NODE_ENV = "production";
 
@@ -54,6 +55,10 @@ const createMainWindow = () => {
 
   menuApplication = Menu.buildFromTemplate(menuTemplate);
   Menu.setApplicationMenu(menuApplication);
+
+  mainWindow.once("ready-to-show", () => {
+    autoUpdater.checkForUpdatesAndNotify();
+  });
 };
 
 if (process.env.NODE_ENV !== "production") {
@@ -174,4 +179,42 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createMainWindow();
   }
+});
+
+// Auto update new version with Electron-Updater
+ipcMain.on("app_version", async (event) => {
+  event.sender.send("app_version", { version: app.getVersion() });
+});
+
+ipcMain.on("restart_app", () => {
+  autoUpdater.quitAndInstall();
+});
+
+autoUpdater.on("checking-for-update", () => {
+  mainWindow.webContents.send("message", "Checking for update...");
+  console.log("Checking for update");
+});
+autoUpdater.on("update-available", (info) => {
+  mainWindow.webContents.send("message", "update_available");
+  console.log("update avail");
+});
+autoUpdater.on("update-not-available", (info) => {
+  mainWindow.webContents.send("message", "Update not available.");
+});
+autoUpdater.on("download-progress", (progressObj) => {
+  let log_message = "Download speed: " + progressObj.bytesPerSecond;
+  log_message = log_message + " - Downloaded " + progressObj.percent + "%";
+  log_message =
+    log_message +
+    " (" +
+    progressObj.transferred +
+    "/" +
+    progressObj.total +
+    ")";
+  mainWindow.webContents.send("message", log_message);
+});
+autoUpdater.on("update-downloaded", (info) => {
+  console.log("update downlaoded");
+  mainWindow.webContents.send("message", "update_downloaded");
+  autoUpdater.quitAndInstall();
 });

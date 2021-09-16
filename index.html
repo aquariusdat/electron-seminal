@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./public/css/index.css" />
-    <title>Task App 1.0.5</title>
+    <title>Task App 1.0.3</title>
   </head>
   <body>
     <div class="wrapper">
@@ -20,12 +20,33 @@
         <button id="show-folder"><span>Show folder</span></button>
       </div>
       <ul class="task-list"></ul>
+      <div class="updater">
+        <p id="message-update"></p>
+        <p id="messages"></p>
+      </div>
     </div>
     <script>
       // Initialize electron
       const electron = require("electron");
       const { ipcRenderer, shell } = electron;
       console.log("Khởi tạo thành công cửa sổ index.html");
+
+      // auto update
+      ipcRenderer.send("app_version");
+
+      ipcRenderer.on("app_version", async (event, args) => {
+        console.log(args.version);
+        document.getElementById("message-update").innerText =
+          "Version " + args.version;
+      });
+
+      ipcRenderer.on("message", function (event, text) {
+        var container = document.getElementById("messages");
+        container.innerHTML = "";
+        var message = document.createElement("div");
+        message.innerHTML = text;
+        container.appendChild(message);
+      });
 
       // Process
       const reviewProcess = () => {
